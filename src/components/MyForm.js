@@ -23,7 +23,6 @@ export default function FormDialog() {
 
   const[sucess, setSucess] = React.useState(false);
 
-  
   const [errorName, setErrorName] = React.useState(false);
   const [errorLastName, setErrorLastName] = React.useState(false);
   const [errorDni, setErrorDni] = React.useState(false);
@@ -35,6 +34,12 @@ export default function FormDialog() {
   const [errMessageDni, setErrMessageDni] = React.useState('')
   const [errMessageEmail, setErrMessageEmail] = React.useState('')
   const [errMessagePhone, setErrMessagePhone] = React.useState('')
+
+  const [btnDisabledName, setBtnDisabledName] = React.useState(true)
+  const [btnDisabledLastName, setBtnDisabledLastName] = React.useState(true)
+  const [btnDisabledDni, setBtnDisabledDni] = React.useState(true)
+  const [btnDisabledEmail, setBtnDisabledEmail] = React.useState(true)
+  const [btnDisabledPhone, setBtnDisabledPhone] = React.useState(true)
 
 
   const handleClickOpen = () => {
@@ -64,19 +69,23 @@ export default function FormDialog() {
     
   };
 
-  const validEmail = new RegExp(
-    '^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$'
-  );
-
-  const validPhone = new RegExp(
-    '^[0-9\b]+$'
-  );
-
   const validDni = new RegExp(
     // Dni Solo Numeros y longitud 8
     '(^([0-9]{7,7})|^)$'
   );
  
+  const validEmail = new RegExp(
+    '^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$'
+   //'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+  );
+
+  const validPhone = new RegExp(
+    //'^[0-9\b]+$'
+    '^[0-9]+$'
+
+  );
+
+
  // setSucess(false)
 
   return (
@@ -92,17 +101,24 @@ export default function FormDialog() {
             <div>Completá tus datos para que te avisemos cuando esté disponible. Además, participás por premios de hasta $5.000.</div>
           </DialogContentText>
           
-          {/* NOMBRE */}
+          {/* NOMBRE ***************************************************************/}
           <TextField
             onChange= { 
               (e) => { 
                 setName(e.target.value)
-                if(name.length < 2){
+                if(e.target.value.length <= 2 && e.target.value != ''){
                   setErrorName(true)
                   setErrMessageName("El nombre debe tener mas de 2 caracteres")
+                  setBtnDisabledName(true)
+                }else if(e.target.value == ''){
+                  setErrorName(true)
+                  setErrMessageName('El campo no puede ser vacio')
+                  setBtnDisabledName(true)
                 }else{
                   setErrorName(false)
                   setErrMessageName('')
+                  setBtnDisabledName(false)
+                  console.log("1-btnName: " + btnDisabledName)
                 }
               }
             }
@@ -119,15 +135,22 @@ export default function FormDialog() {
             helperText={errMessageName}
           
           />
-          {/* APELLIDO */}
+          {/* APELLIDO *************************************************************/}
            <TextField
             onChange={(e) => {setLastName(e.target.value)
-            if(lastName.length < 2){
+            if(lastName.length <= 2 && lastName.length != ''){
               setErrorLastName(true)
               setErrMessageLastName("El Apellido debe tener mas de 2 caracteres")
+              setBtnDisabledLastName(true)
+            }else if(e.target.value == ''){
+              setErrorLastName(true)
+              setErrMessageLastName('El campo no puede ser vacio')
+              setBtnDisabledLastName(true)
             }else{
               setErrorLastName(false)
               setErrMessageLastName('')
+              setBtnDisabledLastName(false)
+              console.log("2-btnLastName: " + btnDisabledLastName)
             }
             }}
             required
@@ -140,7 +163,7 @@ export default function FormDialog() {
             error={errorLastName}
             helperText={errMessageLastName}
           />
-          {/* DNI */}
+          {/* DNI ******************************************************************/}
             <TextField
              onChange= { 
               (e) => { 
@@ -148,9 +171,16 @@ export default function FormDialog() {
                 if(!validDni.test(dni)){
                   setErrorDni(true)
                   setErrMessageDni("El Dni debe Numérico y de 8 caracteres")
+                  setBtnDisabledDni(true)
+                }else if(e.target.value == ''){
+                  setErrorDni(true)
+                  setErrMessageDni('El campo no puede ser vacio')
+                  setBtnDisabledDni(true)
                 }else{
                   setErrorDni(false)
                   setErrMessageDni('')
+                  setBtnDisabledDni(false)
+                  console.log("3-btnDni: " + btnDisabledDni)
                 }
                }
              }
@@ -169,12 +199,22 @@ export default function FormDialog() {
             onChange= { 
               (e) => { 
                 setEmail(e.target.value)
-                if(!validEmail.test(email)){
+                
+                if(!validEmail.test(e.target.value)){
+                  console.log("EMail: " + e.target.value)
                   setErrorEmail(true)
                   setErrMessageEmail("Formato del Email Inválido")
+                  setBtnDisabledEmail(true)
+                 }else if(e.target.value === ''){
+                  setErrorEmail(true)
+                  setErrMessageEmail('El campo no puede ser vacio')
+                  setBtnDisabledEmail(true) 
                 }else{
+                  console.log("EMail-else2: " + e.target.value)
                   setErrorEmail(false)
                   setErrMessageEmail('')
+                  setBtnDisabledEmail(false)
+                  console.log("4-btnEmail: " + btnDisabledEmail)
                 }
               }
             }
@@ -194,11 +234,21 @@ export default function FormDialog() {
               (e) => { 
                 setPhone(e.target.value)
                 if(!validPhone.test(phone)){
+                  console.log("phone1: " + e.target.value)
                   setErrorPhone(true)
                   setErrMessagePhone("El telefono debe ser numérico")
+                  setBtnDisabledEmail(true)
+                }else if(e.target.value == ''){
+                  console.log("Phone2: " + e.target.value)
+                  setErrorPhone(true)
+                  setErrMessagePhone('El campo no puede ser vacio')
+                  setBtnDisabledPhone(true)
                 }else{
+                  console.log("Phone3: " + e.target.value)
                   setErrorPhone(false)
                   setErrMessagePhone('')
+                  setBtnDisabledPhone(false)
+                  console.log("5-btnPhone: " + btnDisabledPhone)
                 }
                }
              }
@@ -217,7 +267,8 @@ export default function FormDialog() {
           <Button onClick={handleClose} color="primary">
             Cancelar
           </Button>
-          <Button onClick={handleRegister} color="primary">
+         {/*  <Button disabled={btnDisabledName || btnDisabledLastName || btnDisabledDni || btnDisabledEmail || btnDisabledPhone } onClick={handleRegister} color="primary">  */}
+              <Button disabled={!name || !lastName || !dni || !email || !phone } onClick={handleRegister} color="primary">  
             Anotarme
           </Button>
         </DialogActions>
